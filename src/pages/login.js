@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import iphoneImage from '../images/iphone-with-profile.jpg';
 import instagramLogo from '../images/logo.png';
 import * as ROUTES from '../constants/routes';
-import FirebaseContext from '../context/firebase';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -13,7 +12,6 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
-    const { firebase } = useContext(FirebaseContext);
     const navigate = useNavigate();
 
     const isInvalid = password === '' || email === '';
