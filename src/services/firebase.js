@@ -19,3 +19,31 @@ export async function getUserByUserId(userId) {
 
     return user;
 }
+
+
+export async function getUserFollowedPhotos(userId, followingUserIds) {
+    const q = query(collection(db, 'photos'), where('userId', 'in', followingUserIds));
+    const result = await getDocs(q);
+
+    const userFollowedPhotos = result.docs.map((item) => ({
+        ...item.data(),
+        docId: item.id
+    }));
+
+    console.log(userFollowedPhotos);
+
+    const photosWithUserDetails = await Promise.all(
+        userFollowedPhotos.map(async (photo) => {
+            let userLikedPhoto = false;
+            if (photo.likes.includes(userId)) {
+                userLikedPhoto = true;
+            }
+            const user = await getUserByUserId(photo.userId);
+            const username = user[0].username;
+            return { username, ...photo, userLikedPhoto };
+            
+        })
+    )
+
+    return photosWithUserDetails;
+}
