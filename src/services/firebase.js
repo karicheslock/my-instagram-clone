@@ -1,6 +1,18 @@
 import { db } from '../lib/firebase';
 import { query, getDocs, where, collection, limit, updateDoc, arrayRemove, arrayUnion, doc } from 'firebase/firestore';
 
+export async function isUserFollowingProfile(activeUsername, profileUserId) {
+    const q = query(collection(db, 'users'), where('username', '==', activeUsername), where('following', 'array-contains', profileUserId));
+    const result = await getDocs(q);
+
+    const [response = {}] = result.docs.map((item) => ({
+        ...item.data(),
+        docId: item.id
+    }));
+
+    return !!response.fullName;
+}
+
 export async function doesUsernameExist(username) {
     const q = query(collection(db, "users"), where("username", "==", username))
     const result = await getDocs(q);
@@ -9,13 +21,14 @@ export async function doesUsernameExist(username) {
 }
 
 export async function getUserByUserId(userId) {
-    const q = query(collection(db, "users"), where("userId", "==", userId))
+    const q = query(collection(db, "users"), where("userId", "==", userId));
     const result = await getDocs(q);
 
     const user = result.docs.map((item) => ({
         ...item.data(),
         docId: item.id
     }));
+    
 
     return user;
 }
@@ -68,6 +81,54 @@ export async function updateUserFollowing(docId, profileId, isFollowingProfile) 
 export async function updateFollowedUserFollowers(docId, followingUserId, isFollowingProfile) {
     const userRef = doc(db, 'users', docId);
     return updateDoc(userRef, {
-        following: isFollowingProfile ? arrayRemove(followingUserId) : arrayUnion(followingUserId)
+        followers: isFollowingProfile ? arrayRemove(followingUserId) : arrayUnion(followingUserId)
     });
+}
+
+export async function getUserByUsername(username) {
+    const q = query(collection(db, 'users'), where('username', '==', username));
+    const result = await getDocs(q);
+    console.log(result);
+
+    const user = result.docs.map((item) => ({
+        ...item.data(),
+        docId: item.id
+    }));
+
+    return user.length > 0 ? user : false;
+}
+
+export async function getUserIdByUsername(username) {
+    const q = query(collection(db, 'users'), where('username', '==', username));
+    const result = await getDocs(q);
+
+    const [{ userId = null }] = result.docs.map((item) => ({
+        ...item.data()
+    }));
+
+    return userId;
+}
+
+export async function getUserPhotosByUsername(username) {
+    const userId = await getUserIdByUsername(username);
+    const q = query(collection(db, 'photos'), where('userId', '==', userId));
+    const result = await getDocs(q);
+
+    const photos = result.docs.map((item) => ({
+        ...item.data(),
+        docId: item.id
+    }));
+
+    return photos;
+}
+
+export async function toggleFollow(
+    isFollowingProfile,
+    activeUserDocId,
+    profileDocId,
+    profileId,
+    followingUserId
+) {
+    await updateUserFollowing(activeUserDocId, profileId, isFollowingProfile);
+    await updateFollowedUserFollowers(profileDocId, followingUserId, isFollowingProfile);
 }
