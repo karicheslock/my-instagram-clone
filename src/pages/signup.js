@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import instagramLogo from '../images/logo.png';
+
 import * as ROUTES from '../constants/routes';
 import { auth } from '../lib/firebase';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
@@ -80,7 +80,7 @@ export default function SignUp() {
             <div className='flex flex-col'>
                 <div className='flex flex-col items-center bg-white p-4 border mb-4'>
                     <h1 className='flex justify-center w-full'>
-                        <img src={instagramLogo} alt='Instagram logo' className='mt-2 w-6/12 mb-4' />
+                        <img src='./images/logo.png' alt='Instagram logo' className='mt-2 w-6/12 mb-4' />
                     </h1>
 
                     {error && <p className='mb-4 text-xs text-red-500 text-center'>{error}</p>}

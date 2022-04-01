@@ -5,7 +5,7 @@ import Post from './posts/index';
 
 export default function TImeline() {
     const { photos } = useFollowedUsersPhotos();
-    console.log(photos);
+
 
     return (
         <div className='container col-span-2'>

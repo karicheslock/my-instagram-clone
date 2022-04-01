@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import iphoneImage from '../images/iphone-with-profile.jpg';
-import instagramLogo from '../images/logo.png';
+
 import * as ROUTES from '../constants/routes';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
@@ -45,12 +44,12 @@ export default function Login() {
     return (
         <div className='container flex mx-auto max-w-screen-md items-center h-screen'>
             <div className='flex w-3/5'>
-                <img src={iphoneImage} alt='iPhone with Instagram app' />
+                <img src='./images/iphone-with-profile.jpg' alt='iPhone with Instagram app' />
             </div>
             <div className='flex flex-col w-2/5'>
                 <div className='flex flex-col items-center bg-white p-4 border mb-4'>
                     <h1 className='flex justify-center w-full'>
-                        <img src={instagramLogo} alt='Instagram logo' className='mt-2 w-6/12 mb-4' />
+                        <img src='./images/logo.png' alt='Instagram logo' className='mt-2 w-6/12 mb-4' />
                     </h1>
                     {error && <p className='mb-4 text-xs text-red-500'>{error}</p>}
                 

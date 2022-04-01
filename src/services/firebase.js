@@ -14,7 +14,7 @@ export async function isUserFollowingProfile(activeUsername, profileUserId) {
 }
 
 export async function doesUsernameExist(username) {
-    const q = query(collection(db, "users"), where("username", "==", username))
+    const q = query(collection(db, "users"), where("username", "==", username));
     const result = await getDocs(q);
 
     return result.docs.map((user) => user.data().length > 0);
@@ -23,6 +23,7 @@ export async function doesUsernameExist(username) {
 export async function getUserByUserId(userId) {
     const q = query(collection(db, "users"), where("userId", "==", userId));
     const result = await getDocs(q);
+    console.log(result);
 
     const user = result.docs.map((item) => ({
         ...item.data(),
@@ -43,7 +44,6 @@ export async function getUserFollowedPhotos(userId, followingUserIds) {
         docId: item.id
     }));
 
-    console.log(userFollowedPhotos);
 
     const photosWithUserDetails = await Promise.all(
         userFollowedPhotos.map(async (photo) => {

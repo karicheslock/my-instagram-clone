@@ -1,24 +1,22 @@
 import React, { useContext } from 'react';
 import * as ROUTES from '../constants/routes';
-import instagramLogo from '../images/logo.png';
+
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import karlPhoto from '../images/avatars/karl.jpg';
+import { useNavigate } from 'react-router-dom';
 import UserContext from '../context/user';
 
 
 export default function Header() {
 
     const { user } = useContext(UserContext);
-    
+    let navigate = useNavigate();
 
-    /* const user = {
-        displayName: 'karl',
-        image: karlPhoto
-    }; */
-
-    //const user = false;
+    const signUserOut = () => {
+        signOut(auth);
+        navigate('/login');
+    }
 
     return (
         <header className='h-16 bg-white border-b mb-8'>
@@ -27,7 +25,7 @@ export default function Header() {
                     <div className='text-gray-700 text-center flex items-center align-items cursor-pointer'>
                         <h1>
                             <a aria-label='Dashboard' href={ROUTES.DASHBOARD}>
-                                <img src={instagramLogo} alt='Instagram logo' className='mt-2 w-6/12' />
+                                <img src='./images/logo.png' alt='Instagram logo' className='mt-2 w-6/12' />
                             </a>
                         </h1>
                     </div>
@@ -42,10 +40,11 @@ export default function Header() {
 
                                 <button 
                                     title='Sign Out' 
-                                    onClick={() => signOut(auth) } 
+                                    onClick={ signUserOut } 
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {
                                             signOut(auth)
+                                            navigate('/login')
                                         }
                                     }}
                                 >
@@ -57,7 +56,7 @@ export default function Header() {
                                     <Link to={`/p/${user.displayName}`}>
                                         <img 
                                             className='rounded-full h-8 w-8 flex'
-                                            src={`${user.image}`}
+                                            src={`./images/avatars/${user.displayName}.jpg`}
                                             alt={`${user.displayName} profile picture`}
                                         />
                                     </Link>
